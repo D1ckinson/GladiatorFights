@@ -281,9 +281,9 @@ namespace GladiatorFights
         }
 
         public string Name { get; private set; }
-        public int Health { get; protected set; }
-        public int Damage { get; private set; }
-        public int Armor { get; private set; }
+        protected int Health { get; set; }
+        protected int Damage { get; private set; }
+        protected int Armor { get; private set; }
 
         public bool IsAlive => Health > 0;
 
