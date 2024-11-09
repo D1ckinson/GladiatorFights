@@ -60,7 +60,17 @@ namespace GladiatorFights
             }
         }
 
-        public void Fight()
+        private List<Warrior> FillWarriors() =>
+            new List<Warrior>
+            {
+                new Rogue("Разбойник",90,15,7),
+                new Barbarian("Варвар",110,16,4),
+                new Fanatic("Фанатик", 130, 12, 9),
+                new Mage("Маг", 95, 18, 1),
+                new Thief("Вор", 80,17,12)
+            };
+
+        private void Fight()
         {
             int millisecondsTimeout = 1400;
             Warrior warrior1 = ChoseWarrior();
@@ -119,14 +129,12 @@ namespace GladiatorFights
 
         private bool IsIndexInRange(int index, string errorText)
         {
-            if (index < 0 || index >= _warriors.Count)
-            {
-                Console.WriteLine(errorText);
+            if (index >= 0 && index < _warriors.Count)
+                return true;
 
-                return false;
-            }
+            Console.WriteLine(errorText);
 
-            return true;
+            return false;
         }
     }
 
@@ -149,10 +157,10 @@ namespace GladiatorFights
             _maxHealth = health;
         }
 
-        public string Name { get; private set; }
+        public string Name { get; }
         public int Health { get; private set; }
-        public int Damage { get; private set; }
-        public int Armor { get; private set; }
+        public int Damage { get; }
+        public int Armor { get; }
 
         public bool IsAlive => Health > 0;
 
@@ -245,12 +253,8 @@ namespace GladiatorFights
         private float _triggerRageQuantity = 100;
         private int _heal = 26;
         private int _healPenalty = 5;
-        private int _maxHealth;
 
-        public Fanatic(string name, int health, int damage, int armor) : base(name, health, damage, armor)
-        {
-            _maxHealth = health;
-        }
+        public Fanatic(string name, int health, int damage, int armor) : base(name, health, damage, armor) { }
 
         public override void TakeDamage(int damage)
         {
