@@ -20,14 +20,7 @@ namespace GladiatorFights
 
         public Arena()
         {
-            _warriors = new List<Warrior>
-            {
-                new Rogue("Разбойник",90,15,7),
-                new Barbarian("Варвар",110,16,4),
-                new Fanatic("Фанатик", 130, 12, 9),
-                new Mage("Маг", 95, 18, 1),
-                new Thief("Вор", 80,17,12)
-            };
+            _warriors = FillWarriors();
         }
 
         public void Work()
