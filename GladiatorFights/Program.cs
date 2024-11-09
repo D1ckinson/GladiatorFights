@@ -16,17 +16,17 @@ namespace GladiatorFights
 
     public class Arena
     {
-        private List<WarriorFabric> _warriorFabrics;
+        private List<Warrior> _warriors;
 
         public Arena()
         {
-            _warriorFabrics = new List<WarriorFabric>()
+            _warriors = new List<Warrior>
             {
-                new RogueFabric(),
-                new BarbarianFabric(),
-                new FanaticFabric(),
-                new MageFabric(),
-                new ThiefFabric()
+                new Rogue("Разбойник",90,15,7),
+                new Barbarian("Варвар",110,16,4),
+                new Fanatic("Фанатик", 130, 12, 9),
+                new Mage("Маг", 95, 18, 1),
+                new Thief("Вор", 80,17,12)
             };
         }
 
@@ -104,19 +104,22 @@ namespace GladiatorFights
 
             do
             {
-                for (int i = 0; i < _warriorFabrics.Count; i++)
-                    Console.WriteLine($"{i + 1} - {_warriorFabrics[i].Description}");
+                for (int i = 0; i < _warriors.Count; i++)
+                {
+                    Warrior warrior = _warriors[i];
+                    Console.WriteLine($"{i + 1} - {warrior.Name}. Здоровье: {warrior.Health}. Урон: {warrior.Damage}. Броня: {warrior.Armor}");
+                }
 
                 index = UserUtils.ReadInt("Выберите воина: ") - 1;
 
             } while (IsIndexInRange(index, "Воина с таким номером нет") == false);
 
-            return _warriorFabrics[index].Create();
+            return _warriors[index].Clone();
         }
 
         private bool IsIndexInRange(int index, string errorText)
         {
-            if (index < 0 || index >= _warriorFabrics.Count)
+            if (index < 0 || index >= _warriors.Count)
             {
                 Console.WriteLine(errorText);
 
@@ -127,142 +130,6 @@ namespace GladiatorFights
         }
     }
 
-    public abstract class WarriorFabric
-    {
-        protected string Name;
-
-        public abstract string Description { get; protected set; }
-        protected abstract int[] HealthStats { get; set; }
-        protected abstract int[] DamageStats { get; set; }
-        protected abstract int[] ArmorStats { get; set; }
-
-        public abstract Warrior Create();
-
-        protected int GenerateHealth() =>
-            UserUtils.GenerateRandomValue(HealthStats);
-
-        protected int GenerateDamage() =>
-            UserUtils.GenerateRandomValue(DamageStats);
-
-        protected int GenerateArmor() =>
-            UserUtils.GenerateRandomValue(ArmorStats);
-    }
-
-    public class RogueFabric : WarriorFabric
-    {
-        public RogueFabric()
-        {
-            Name = "Разбойник";
-            HealthStats = new int[] { 80, 100 };
-            DamageStats = new int[] { 10, 20 };
-            ArmorStats = new int[] { 5, 10 };
-            Description = $"Выбрать Разбойника. Имеет шанс нанести двойной урон" +
-                $" Здоровье: {HealthStats[0]}-{HealthStats[1]}." +
-                $" Урон: {DamageStats[0]}-{DamageStats[1]}." +
-                $" Защита: {ArmorStats[0]}-{ArmorStats[1]}.";
-        }
-
-        public override string Description { get; protected set; }
-        protected override int[] HealthStats { get; set; }
-        protected override int[] DamageStats { get; set; }
-        protected override int[] ArmorStats { get; set; }
-
-        public override Warrior Create() =>
-            new Rogue(Name, GenerateHealth(), GenerateDamage(), GenerateArmor());
-    }
-
-    public class BarbarianFabric : WarriorFabric
-    {
-        public BarbarianFabric()
-        {
-            Name = "Варвар";
-            HealthStats = new int[] { 100, 120 };
-            DamageStats = new int[] { 15, 18 };
-            ArmorStats = new int[] { 3, 6 };
-            Description = "Выбрать Варвара. Каждую третью свою атаку наносит дважды урон врагу" +
-                $" Здоровье: {HealthStats[0]}-{HealthStats[1]}." +
-                $" Урон: {DamageStats[0]}-{DamageStats[1]}." +
-                $" Защита: {ArmorStats[0]}-{ArmorStats[1]}.";
-        }
-
-        public override string Description { get; protected set; }
-        protected override int[] HealthStats { get; set; }
-        protected override int[] DamageStats { get; set; }
-        protected override int[] ArmorStats { get; set; }
-
-        public override Warrior Create() =>
-            new Barbarian(Name, GenerateHealth(), GenerateDamage(), GenerateArmor());
-    }
-
-    public class FanaticFabric : WarriorFabric
-    {
-        public FanaticFabric()
-        {
-            Name = "Фанатик";
-            HealthStats = new int[] { 120, 150 };
-            DamageStats = new int[] { 6, 12 };
-            ArmorStats = new int[] { 8, 10 };
-            Description = "Выбрать Фанатика. Накапливая ярость лечит себя" +
-                $" Здоровье: {HealthStats[0]}-{HealthStats[1]}." +
-                $" Урон: {DamageStats[0]}-{DamageStats[1]}." +
-                $" Защита: {ArmorStats[0]}-{ArmorStats[1]}.";
-        }
-
-        public override string Description { get; protected set; }
-        protected override int[] HealthStats { get; set; }
-        protected override int[] DamageStats { get; set; }
-        protected override int[] ArmorStats { get; set; }
-
-        public override Warrior Create() =>
-            new Fanatic(Name, GenerateHealth(), GenerateDamage(), GenerateArmor());
-    }
-
-    public class MageFabric : WarriorFabric
-    {
-        public MageFabric()
-        {
-            Name = "Маг";
-            HealthStats = new int[] { 90, 100 };
-            DamageStats = new int[] { 17, 20 };
-            ArmorStats = new int[] { 1, 1 };
-            Description = "Выбрать Мага. Использует огненный шар" +
-                $" Здоровье: {HealthStats[0]}-{HealthStats[1]}." +
-                $" Урон: {DamageStats[0]}-{DamageStats[1]}." +
-                $" Защита: {ArmorStats[0]}-{ArmorStats[1]}.";
-        }
-
-        public override string Description { get; protected set; }
-        protected override int[] HealthStats { get; set; }
-        protected override int[] DamageStats { get; set; }
-        protected override int[] ArmorStats { get; set; }
-
-        public override Warrior Create() =>
-            new Mage(Name, GenerateHealth(), GenerateDamage(), GenerateArmor());
-    }
-
-    public class ThiefFabric : WarriorFabric
-    {
-        public ThiefFabric()
-        {
-            Name = "Вор";
-            HealthStats = new int[] { 70, 90 };
-            DamageStats = new int[] { 15, 18 };
-            ArmorStats = new int[] { 10, 14 };
-            Description = "Выбрать Вора. Имеет шанс уклониться от атаки" +
-                $" Здоровье: {HealthStats[0]}-{HealthStats[1]}." +
-                $" Урон: {DamageStats[0]}-{DamageStats[1]}." +
-                $" Защита: {ArmorStats[0]}-{ArmorStats[1]}.";
-        }
-
-        public override string Description { get; protected set; }
-        protected override int[] HealthStats { get; set; }
-        protected override int[] DamageStats { get; set; }
-        protected override int[] ArmorStats { get; set; }
-
-        public override Warrior Create() =>
-            new Thief(Name, GenerateHealth(), GenerateDamage(), GenerateArmor());
-    }
-
     public interface IDamageable
     {
         void TakeDamage(int damage);
@@ -271,6 +138,7 @@ namespace GladiatorFights
     public abstract class Warrior : IDamageable
     {
         private float _minDamageMultiplier = 0.25f;
+        private int _maxHealth;
 
         protected Warrior(string name, int health, int damage, int armor)
         {
@@ -278,12 +146,13 @@ namespace GladiatorFights
             Health = health;
             Damage = damage;
             Armor = armor;
+            _maxHealth = health;
         }
 
         public string Name { get; private set; }
-        protected int Health { get; set; }
-        protected int Damage { get; private set; }
-        protected int Armor { get; private set; }
+        public int Health { get; private set; }
+        public int Damage { get; private set; }
+        public int Armor { get; private set; }
 
         public bool IsAlive => Health > 0;
 
@@ -304,6 +173,16 @@ namespace GladiatorFights
 
             Console.WriteLine($"{Name} получил {damage} урона. {Armor} защиты блокирует {blockedDamage} урона. оставшееся здоровье: {Health}");
         }
+
+        protected void Heal(int healValue)
+        {
+            if (healValue < 0)
+                return;
+
+            Health = Math.Min(Health + healValue, _maxHealth);
+        }
+
+        public abstract Warrior Clone();
     }
 
     public class Rogue : Warrior
@@ -328,6 +207,9 @@ namespace GladiatorFights
 
             base.Attack(warrior);
         }
+
+        public override Warrior Clone() =>
+            new Rogue(Name, Health, Damage, Armor);
     }
 
     public class Barbarian : Warrior
@@ -351,6 +233,9 @@ namespace GladiatorFights
 
             base.Attack(warrior);
         }
+
+        public override Warrior Clone() =>
+            new Barbarian(Name, Health, Damage, Armor);
     }
 
     public class Fanatic : Warrior
@@ -358,7 +243,8 @@ namespace GladiatorFights
         private float _rageQuantity = 0f;
         private float _ragePerDamage = 1.3f;
         private float _triggerRageQuantity = 100;
-        private int _heal = 30;
+        private int _heal = 26;
+        private int _healPenalty = 5;
         private int _maxHealth;
 
         public Fanatic(string name, int health, int damage, int armor) : base(name, health, damage, armor)
@@ -372,19 +258,18 @@ namespace GladiatorFights
 
             if (_rageQuantity >= _triggerRageQuantity)
             {
-                Console.WriteLine($"{Name} исцеляет себя");
+                Console.WriteLine($"{Name} исцеляет себя на {_heal} здоровья.");
+                Heal(_heal);
+
                 _rageQuantity -= _triggerRageQuantity;
-                Heal();
+                _heal -= _healPenalty;
             }
 
             base.TakeDamage(damage);
         }
 
-        private void Heal()
-        {
-            int health = Health + _heal;
-            Health = Math.Min(health, _maxHealth);
-        }
+        public override Warrior Clone() =>
+            new Fanatic(Name, Health, Damage, Armor);
     }
 
     public class Mage : Warrior
@@ -412,6 +297,9 @@ namespace GladiatorFights
 
             base.Attack(warrior);
         }
+
+        public override Warrior Clone() =>
+            new Mage(Name, Health, Damage, Armor);
     }
 
     public class Thief : Warrior
@@ -434,6 +322,9 @@ namespace GladiatorFights
 
             base.TakeDamage(damage);
         }
+
+        public override Warrior Clone() =>
+            new Thief(Name, Health, Damage, Armor);
     }
 
     public static class UserUtils
@@ -459,8 +350,5 @@ namespace GladiatorFights
 
         public static int GenerateRandomValue(int min, int max) =>
             s_random.Next(min, max);
-
-        public static int GenerateRandomValue(int[] values) =>
-            s_random.Next(values[0], values[1]);
     }
 }
